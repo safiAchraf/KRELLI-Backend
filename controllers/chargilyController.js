@@ -1,4 +1,6 @@
 import prisma from "../prisma/client.js";
+import { configDotenv } from "dotenv";
+configDotenv();
 
 
 const webhook = async (req, res) => {
@@ -15,7 +17,7 @@ const webhook = async (req, res) => {
 
   // Calculate the signature
   const computedSignature = crypto
-    .createHmac("sha256", chargilyApiSecretKey)
+    .createHmac("sha256", process.env.CHARGILY_SECRET_KEY)
     .update(payload)
     .digest("hex");
 
