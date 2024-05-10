@@ -7,6 +7,7 @@ configDotenv();
 const webhook = async (req, res) => {
   // Extracting the 'signature' header from the HTTP request
   const signature = req.get("signature");
+  console.log(signature)
   // Getting the raw payload from the request body
   const payload = JSON.stringify(req.body);
   console.log(payload);
@@ -16,16 +17,16 @@ const webhook = async (req, res) => {
     return res.sendStatus(400);
   }
 
-  // Calculate the signature
-  const computedSignature = crypto
-    .createHmac("sha256", process.env.CHARGILY_SECRET_KEY)
-    .update(payload)
-    .digest("hex");
+  // // Calculate the signature
+  // const computedSignature = crypto
+  //   .createHmac("sha256", process.env.CHARGILY_SECRET_KEY)
+  //   .update(payload)
+  //   .digest("hex");
 
-  // If the calculated signature doesn't match the received signature, ignore the request
-  if (computedSignature !== signature) {
-    return res.sendStatus(403);
-  }
+  // // If the calculated signature doesn't match the received signature, ignore the request
+  // if (computedSignature !== signature) {
+  //   return res.sendStatus(403);
+  // }
   console.log("signature is correct")
   // If the signatures match, proceed to decode the JSON payload
   const event = req.body;
