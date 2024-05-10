@@ -1,14 +1,14 @@
 import express from "express";
-import webhook from "../controllers/chargilyController";
+import webhook from "../controllers/chargilyController.js";
 
 const ChargilyRouter = express.Router();
 
-router.post("/webhook", webhook);
+ChargilyRouter.post("/webhook", webhook);
 
-router.get("/success", (req, res) => {
+ChargilyRouter.get("/success", (req, res) => {
     res.json("payment completed successfully");
 });
-router.get("/failed", (req, res) => {
+ChargilyRouter.get("/failed", (req, res) => {
     res.json("payment has failed");
 });
 

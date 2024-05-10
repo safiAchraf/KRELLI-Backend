@@ -29,6 +29,16 @@ export const updateProfile = async (req, res) => {
     res.json(user);
 };
 
-export const deleteAccount()
 
 
+
+export const deleteProfile = async (req, res) => {
+    const userId = req.user.userId;
+    const user = await prisma.user.delete({
+        where: {
+            id: userId,
+        },
+    });
+
+    res.json(user);
+};
