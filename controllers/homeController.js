@@ -90,8 +90,8 @@ const addReservation = async (req, res) => {
     const newCheckout = await client.createCheckout({
         amount : home.price * days,
         currency : "dzd",
-        success_url: "http://localhost:4500/success",
-        failure_url: "http://localhost:4500/failure",
+        success_url: "https://krelli.onrender.com/chargily/success",
+        failure_url: "https://krelli.onrender.com/chargily/failure",
         metadata: [{ reservationId: reservation.id },]
     });
 

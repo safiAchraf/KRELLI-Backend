@@ -26,20 +26,20 @@ const webhook = async (req, res) => {
   if (computedSignature !== signature) {
     return res.sendStatus(403);
   }
-
+  console.log("signature is correct")
   // If the signatures match, proceed to decode the JSON payload
   const event = req.body;
 
-  console.log(`event is : ${event}`);
+  
 
   // Switch based on the event type
   switch (event.type) {
     case "checkout.paid":
       const checkout = event.data;
-      console.log(checkout);
+      console.log("im here");
       const reservationId = checkout.metadata[0].reservationId;
 
-      const reservation = await prisma.reservation.update({
+      const updatedreservation = await prisma.reservation.update({
         where: {
           id: reservationId,
         },
@@ -47,6 +47,7 @@ const webhook = async (req, res) => {
           status: "paid",
         },
       });
+
       break;
     case "checkout.failed":
       const failedCheckout = event.data;

@@ -9,7 +9,7 @@ ChargilyRouter.get("/success", (req, res) => {
     res.json("payment completed successfully");
 });
 ChargilyRouter.get("/failed", (req, res) => {
-    res.json("payment has failed");
+    res.json("payment has failure");
 });
 
 
