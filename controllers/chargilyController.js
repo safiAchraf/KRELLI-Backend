@@ -1,4 +1,5 @@
 import prisma from "../prisma/client.js";
+import crypto from "crypto";
 import { configDotenv } from "dotenv";
 configDotenv();
 
