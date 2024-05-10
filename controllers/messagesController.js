@@ -1,7 +1,7 @@
 import prisma from '../prisma/client.js'
 import { onlineUsers } from '../socket/socket.js';
 export const getChats = async (req, res) => {
-    const userId = req.user.id;
+    const userId = req.user.userId;
     const chats = await prisma.chat.findMany({
         where: {
             users: {
@@ -37,7 +37,7 @@ export const getChat = async (req, res) => {
 export const createMessage = async (req, res) => {
     const { chatId } = req.params;
     const { text } = req.body;
-    const userId = req.user.id;
+    const userId = req.user.userId;
     const message = await prisma.message.create({
         data: {
             text,
@@ -48,7 +48,7 @@ export const createMessage = async (req, res) => {
             },
             user: {
                 connect: {
-                    id: req.user.id
+                    id: userId
                 }
             }
         }

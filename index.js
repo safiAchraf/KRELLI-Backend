@@ -5,14 +5,16 @@ import cookieParser from "cookie-parser";
 import authRouter from "./routes/auth.js";
 import originChecker from "./middleware/originChecker.js";
 import corsOptions from "./config/corsOptions.js";
-	import {createServer} from "http";
+import {createServer} from "http";
 import {socketServer} from "./socket/socket.js";
 import HostRouter from "./routes/host.js";
 import HomesRouter from "./routes/home.js";
+import ProfileRouter from "./routes/profile.js";
 import MessagesRouter from "./routes/messages.js";
 import ReservationRouter from "./routes/reservation.js";
 import AdminRouter from "./routes/admin.js";
 import verifyRoles from "./middleware/roleChecker.js";
+import ChargilyRouter from "./routes/chargily.js";
 import cors from "cors";
 dotenv.config();
 
@@ -39,7 +41,7 @@ app.get("/", (req, res) => {
 });
 
 
-
+app.use("/chargily", ChargilyRouter);
 
 app.use("/auth", authRouter);
 
@@ -56,6 +58,7 @@ app.use((req, res, next) => {
 
 
 
+
 app.use("/host", HostRouter);
 
 app.use("/homes", HomesRouter);
@@ -63,6 +66,8 @@ app.use("/homes", HomesRouter);
 app.use("/messages", MessagesRouter);
 
 app.use("/reservations", ReservationRouter);
+
+app.use("/profile", ProfileRouter);
 
 app.use("/admin",verifyRoles("admin"), AdminRouter);
 

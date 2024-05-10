@@ -1,5 +1,13 @@
 import prisma from "../prisma/client.js";
+import Chargily from '@chargily/chargily-pay';
+import { configDotenv } from "dotenv";
+configDotenv();
 
+const apiSecretKey = process.env.CHARGILY_SECRET_KEY;
+const client = new Chargily.ChargilyClient({
+  api_key: apiSecretKey,
+  mode: 'test', 
+});
 
 const singleHome = async (req, res) => {
     const { id } = req.params;
@@ -62,8 +70,8 @@ const addReservation = async (req, res) => {
     }
     const reservation = await prisma.reservation.create({
         data: {
-            startDate: new Date(checkIn),
-            endDate: new Date(checkOut),
+            startDate: checkIn,
+            endDate: checkOut,
             User :{
                 connect : {
                     id : userId,
@@ -76,7 +84,23 @@ const addReservation = async (req, res) => {
             },
         },
     });
-    res.json(reservation);
+    // calculate how many days the user will stay
+    const days = Math.ceil((checkOut - checkIn) / (1000 * 60 * 60 * 24));
+
+    const newCheckout = await client.createCheckout({
+        amount : home.price * days,
+        currency : "dzd",
+        success_url: "http://localhost:4500/success",
+        failure_url: "http://localhost:4500/failure",
+        metadata: [{ reservationId: reservation.id },]
+    });
+
+    
+    res.json({message : "Reservation successfully created" ,url:newCheckout.checkout_url});
+
+
+
+
 };
 
 const createChat = async (req, res) => {
