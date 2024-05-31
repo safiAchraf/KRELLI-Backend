@@ -106,6 +106,17 @@ const addReservation = async (req, res) => {
 const createChat = async (req, res) => {
     const userId = req.user.userId;
     const homeId = req.params.id;
+    //check if there is a chat already created between the user and the owner of the home
+    const chatExists = await prisma.chat.findFirst({
+        where: {
+            users: {
+                some: {
+                    id: userId,
+                },
+            },
+            homeId: parseInt(homeId),
+        },
+    });
     const home = await prisma.home.findUnique({
         where: {
             id: parseInt(homeId),
@@ -164,11 +175,49 @@ const searchHomes = async (req, res) => {
                     url: true,
                 },
             },
+            Review: {
+                select: {
+                    rating: true,
+                    User: {
+                        select: {
+                            firstName: true,
+                            lastName: true,
+                            profileImage: true,
+
+                        },
+                    },
+                    comment: true,
+                },
+            
         },
+        User: {
+            select: {
+                firstName: true,
+                lastName: true,
+                profileImage: true,
+            },
+        },
+    },
+
     });
 
     res.json(homes);
 };
+
+
+const allhomes = async (req, res) => {
+    const homes = await prisma.home.findMany({
+        include: {
+            Pictures: {
+                select: {
+                    url: true,
+                },
+            },
+        },
+    });
+    res.json(homes);
+};    
+
 
 
 const homePictures = async (req, res) => {
@@ -190,7 +239,7 @@ const homePictures = async (req, res) => {
 
 const addReview = async (req, res) => {
     const userId = req.user.userId;
-    const homeId = req.params;
+    const homeId = req.params.id;
     const { rating, comment } = req.body;
     const user = await prisma.user.findUnique({
         where: {
@@ -283,4 +332,4 @@ const homePage = async (req, res) => {
 }
 
 
-export {  singleHome, searchHomes ,addReservation,  homePictures , addReview , allReviews , createChat , homePage};
+export {  singleHome, searchHomes ,addReservation,  homePictures , addReview , allReviews , createChat , homePage , allhomes};

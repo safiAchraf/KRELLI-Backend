@@ -59,7 +59,7 @@ const registerAndAddhome = async (req, res) => {
             guests,
             userId,
             description: req.body.description? req.body.description : "",
-            pictures: {
+            Pictures: {
                 create: pictureUrls.map((url) => ({
                     url,
                 })),
