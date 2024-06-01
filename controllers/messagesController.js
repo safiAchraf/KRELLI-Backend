@@ -31,7 +31,7 @@ export const getChat = async (req, res) => {
             id: chatId
         },
         include: {
-            messages: {
+            Messages: {
                 orderBy: {
                     createdAt: 'asc'
                 }
