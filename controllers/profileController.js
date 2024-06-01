@@ -16,7 +16,11 @@ export const updateProfile = async (req, res) => {
 	const userId = req.user.userId;
 	const { firstName, lastName, email, profileImage , password  , oldPassword} = req.body;
     console.log("password = " , password);
-    const hashedPassword = bcrypt.hash(password, 10);
+    if (!password) {
+        return res.status(400).send("Password is required");
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
    
 
     const user = await prisma.user.findUnique({
