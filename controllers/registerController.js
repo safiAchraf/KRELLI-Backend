@@ -10,6 +10,7 @@ const HandelRegister =  async (req, res) => {
 	const lastName = req.body.lastName;
 	const email = req.body.email;
 	const password = req.body.password;
+	const phoneNumber = req.body.phoneNumber;
 
 	const alreadyExists = await prisma.user.findFirst({
 		where: {
@@ -27,6 +28,7 @@ const HandelRegister =  async (req, res) => {
 			firstName,
 			lastName,
 			email,
+			phoneNumber,
 			password : hashedPassword,
 		},
 	});
