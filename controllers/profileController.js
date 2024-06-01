@@ -15,9 +15,8 @@ export const getProfile = async (req, res) => {
 export const updateProfile = async (req, res) => {
 	const userId = req.user.userId;
 	const { firstName, lastName, email, profileImage , password  , oldPassword} = req.body;
-    if (password){
-        const hashedPassword = bcrypt.hash(password, 10);
-    }
+    const hashedPassword = bcrypt.hash(password, 10);
+   
 
     const user = await prisma.user.findUnique({
         where: {
@@ -41,7 +40,7 @@ export const updateProfile = async (req, res) => {
         },
     });
 
-	res.json(user);
+	res.json(updatedUser);
 };
 
 export const deleteProfile = async (req, res) => {
