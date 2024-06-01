@@ -169,28 +169,10 @@ const createChat = async (req, res) => {
 
 const searchHomes = async (req, res) => {
 
-    const { wilaya, guests, checkIn, checkOut , category  } = req.query;
+    
     
     const homes = await prisma.home.findMany({
-        where: {
-            wilaya : parseInt(wilaya) ? wilaya : undefined,
-            guests: {
-                gte: parseInt(guests) ? guests : undefined,
-            },
-            category: {
-                equals: category ? category : undefined,
-            },
-            Reservations: {
-                none: {
-                    startDate: {
-                        lte: new Date(checkOut) ? checkOut : undefined,
-                    },
-                    endDate: {
-                        gte: new Date(checkIn) ? checkIn : undefined,
-                    },
-                },
-            },
-        },
+
         include: {
             Pictures: {
                 select: {
@@ -222,6 +204,7 @@ const searchHomes = async (req, res) => {
     },
 
     });
+    
 
     res.json(homes);
 };
