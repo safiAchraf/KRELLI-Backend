@@ -134,13 +134,11 @@ const createChat = async (req, res) => {
       id: parseInt(homeId),
     },
     include: {
-        User: true,
-        Pictures: {
-            select: {
-                url: true,
-            },
+      Pictures: {
+        select: {
+          url: true,
         },
-        Messages : true
+      },
     },
   });
   if (!home) {
@@ -154,14 +152,12 @@ const createChat = async (req, res) => {
         connect: userIds.map((id) => ({ id })),
       },
       picture: home.Pictures[0]?.url,
-      OwnerName : home.User.firstName + " " + home.User.lastName,
       ownerImage : home.User.profileImage,
-        
+      OwnerName : home.User.firstName + " " + home.User.lastName,
     },
   });
-  
-  res.json(chat);
 
+  res.json(chat);
 };
 
 const searchHomes = async (req, res) => {
