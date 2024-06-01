@@ -3,6 +3,8 @@ import Chargily from '@chargily/chargily-pay';
 import { configDotenv } from "dotenv";
 configDotenv();
 
+
+
 const apiSecretKey = process.env.CHARGILY_SECRET_KEY;
 const client = new Chargily.ChargilyClient({
   api_key: apiSecretKey,
@@ -104,46 +106,57 @@ const addReservation = async (req, res) => {
 };
 
 const createChat = async (req, res) => {
-    const userId = req.user.userId;
-    const homeId = req.params.id;
-    //check if there is a chat already created between the user and the owner of the home
-    const chatExists = await prisma.chat.findFirst({
-        where: {
-            users: {
-                some: {
-                    id: userId,
-                },
-            },
-            homeId: parseInt(homeId),
-        },
-    });
-    const home = await prisma.home.findUnique({
-        where: {
-            id: parseInt(homeId),
-        },
-        include: {
-            Pictures: {
-                select: {
-                    url: true,
-                },
-            },
-        },
-    });
-    if (!home) {
-        return res.status(404).send("Home not found");
-    }
-    const userIds = [userId, home.userId];
+  const userId = req.user.userId;
+  const homeId = req.params.id;
+  const house = await prisma.home.findUnique({
+    where: {
+      id: parseInt(homeId),
+    },
+  });
 
-    const chat = await prisma.chat.create({
-        data: {
-            users: {
-                connect: userIds.map((id) => ({ id }))
-            },
-            picture : home.Pictures[0].url,
-        }
-    });
-    res.json(chat);
-}
+  // Check if a chat already exists between the users
+  const existingChat = await prisma.chat.findFirst({
+    where: {
+      AND: [
+        { users: { some: { id: userId } } },
+        { users: { some: { id: house.userId } } },
+      ],
+    },
+  });
+
+  if (existingChat) {
+    // Return existing chat if found
+    return res.status(400).send("chat Already Exist");
+  }
+
+  const home = await prisma.home.findUnique({
+    where: {
+      id: parseInt(homeId),
+    },
+    include: {
+      Pictures: {
+        select: {
+          url: true,
+        },
+      },
+    },
+  });
+  if (!home) {
+    return res.status(404).send("Home not found");
+  }
+  const userIds = [userId, home.userId];
+
+  const chat = await prisma.chat.create({
+    data: {
+      users: {
+        connect: userIds.map((id) => ({ id })),
+      },
+      picture: home.Pictures[0]?.url,
+    },
+  });
+
+  res.json(chat);
+};
 
 const searchHomes = async (req, res) => {
 
