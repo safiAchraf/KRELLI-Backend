@@ -28,7 +28,6 @@ const HandelRegister =  async (req, res) => {
 			firstName,
 			lastName,
 			email,
-			phoneNumber,
 			password : hashedPassword,
 		},
 	});

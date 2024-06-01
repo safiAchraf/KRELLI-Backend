@@ -216,7 +216,7 @@ const searchHomes = async (req, res) => {
                     firstName: true,
                     lastName: true,
                     profileImage: true,
-                    phoneNumber: true,
+                
                 },
             },
     },
