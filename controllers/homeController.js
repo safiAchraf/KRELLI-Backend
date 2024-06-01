@@ -210,15 +210,15 @@ const searchHomes = async (req, res) => {
                     },
                     comment: true,
                 },
-            
-        },
-        User: {
-            select: {
-                firstName: true,
-                lastName: true,
-                profileImage: true,
             },
-        },
+            User: {
+                select: {
+                    firstName: true,
+                    lastName: true,
+                    profileImage: true,
+                    phoneNumber: true,
+                },
+            },
     },
 
     });
