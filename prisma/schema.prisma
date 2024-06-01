@@ -17,9 +17,10 @@ model User {
   id String @id @unique @default(uuid())
 
   email        String        @unique
+  phoneNumber  String        
   firstName    String
   lastName     String
-  profileImage String?
+  profileImage String?       @default("http://res.cloudinary.com/dyhllkjj1/image/upload/v1715439059/dblboyxypvtkaeebvpgr.jpg")
   password     String
   role         String        @default("user")
   createdAT    DateTime      @default(now())
@@ -28,6 +29,7 @@ model User {
   Reservation  Reservation[]
   Review       Review[]
   Chat         Chat[]
+  Message      Message[]
 }
 
 model Home {
@@ -46,19 +48,18 @@ model Home {
   Favorite     Favorite[]
   Reservations Reservation[]
   listedAt     DateTime      @default(now())
-  User         User?         @relation(fields: [userId], references: [id])
+  User         User?         @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId       String?
   Review       Review[]
   Pictures     Picture[]
-  Chat         Chat[]
 }
 
 model Favorite {
   id String @id @default(uuid())
 
-  User   User?   @relation(fields: [userId], references: [id])
+  User   User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String?
-  Home   Home?   @relation(fields: [homeId], references: [id])
+  Home   Home?   @relation(fields: [homeId], references: [id], onDelete: Cascade)
   homeId Int?
 
   favoritedAt DateTime @default(now())
@@ -72,9 +73,9 @@ model Reservation {
   createdAt DateTime @default(now())
   status    String   @default("pending")
 
-  User   User?   @relation(fields: [userId], references: [id])
+  User   User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String?
-  Home   Home?   @relation(fields: [homeId], references: [id])
+  Home   Home?   @relation(fields: [homeId], references: [id], onDelete: Cascade)
   homeId Int?
 }
 
@@ -85,9 +86,9 @@ model Review {
   rating    Float?
   createdAt DateTime @default(now())
 
-  User   User?   @relation(fields: [userId], references: [id])
+  User   User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String?
-  Home   Home?   @relation(fields: [homeId], references: [id])
+  Home   Home?   @relation(fields: [homeId], references: [id], onDelete: Cascade)
   homeId Int?
 }
 
@@ -97,7 +98,7 @@ model Picture {
   url       String
   createdAt DateTime @default(now())
 
-  Home   Home? @relation(fields: [homeId], references: [id])
+  Home   Home? @relation(fields: [homeId], references: [id], onDelete: Cascade)
   homeId Int?
 }
 
@@ -107,14 +108,17 @@ model Chat {
   picture   String?
   users     User[]
   Messages  Message[]
-  homeId    Int?
-  Home      Home?     @relation(fields: [homeId], references: [id])
+  ownerImage String?
+  ownerName  String?
 }
 
 model Message {
   id        String   @id @default(uuid())
   message   String
   createdAt DateTime @default(now())
-  Chat      Chat?    @relation(fields: [chatId], references: [id])
+  Chat      Chat?    @relation(fields: [chatId], references: [id], onDelete: Cascade)
   chatId    String?
+  // added
+  User      User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String?
 }

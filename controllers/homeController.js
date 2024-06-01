@@ -139,6 +139,13 @@ const createChat = async (req, res) => {
           url: true,
         },
       },
+        User: {
+            select: {
+            firstName: true,
+            lastName: true,
+            profileImage: true,
+            },
+        },
     },
   });
   if (!home) {
@@ -152,8 +159,8 @@ const createChat = async (req, res) => {
         connect: userIds.map((id) => ({ id })),
       },
       picture: home.Pictures[0]?.url,
-      ownerImage : home.User.profileImage,
-      OwnerName : home.User.firstName + " " + home.User.lastName,
+      ownerImage : home?.User?.profileImage ? home?.User?.profileImage : "https://www.gravatar.com/avatar/",
+      ownerName : home?.User.firstName + " " + home?.User?.lastName, 
     },
   });
 
