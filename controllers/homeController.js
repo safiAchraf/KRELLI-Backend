@@ -106,66 +106,59 @@ const addReservation = async (req, res) => {
 };
 
 const createChat = async (req, res) => {
-    const userId = req.user.userId;
-    const homeId = req.params.id;
-    const house = await prisma.home.findUnique({
-        where: {
-        id: parseInt(homeId),
-        },
-    });
-
-    // Check if a chat already exists between the users
-    const existingChat = await prisma.chat.findFirst({
-        where: {
-        AND: [
-            { users: { some: { id: userId } } },
-            { users: { some: { id: house.userId } } },
-        ],
-        },
-    });
-
-    if (existingChat) {
-        // Return existing chat if found
-        return res.status(400).send("chat Already Exist");
-    }
-    const home = await prisma.home.findUnique({
+  const userId = req.user.userId;
+  const homeId = req.params.id;
+  const house = await prisma.home.findUnique({
     where: {
-        id: parseInt(homeId),
+      id: parseInt(homeId),
+    },
+  });
+
+  // Check if a chat already exists between the users
+  const existingChat = await prisma.chat.findFirst({
+    where: {
+      AND: [
+        { users: { some: { id: userId } } },
+        { users: { some: { id: house.userId } } },
+      ],
+    },
+  });
+
+  if (existingChat) {
+    // Return existing chat if found
+    return res.status(400).send("chat Already Exist");
+  }
+
+  const home = await prisma.home.findUnique({
+    where: {
+      id: parseInt(homeId),
     },
     include: {
         User: true,
         Pictures: {
-        select: {
-            url: true,
+            select: {
+                url: true,
+            },
         },
-        },
-        Messages: true,
+        Messages : true
     },
-    });
-
-    if (!home) {
+  });
+  if (!home) {
     return res.status(404).send("Home not found");
-    }
+  }
+  const userIds = [userId, home.userId];
 
-    const userIds = [userId, home.userId];
-
-    const chat = await prisma.chat.create({
+  const chat = await prisma.chat.create({
     data: {
-        users: {
+      users: {
         connect: userIds.map((id) => ({ id })),
-        },
-        picture: home.Pictures[0]?.url,
+      },
+      picture: home.Pictures[0]?.url,
     },
-    });
+  });
+  
+  res.json(chat);
 
-    const response = {
-    ...chat,
-    profileImage: home.User.profileImage,
-    Name: home.User.firstName + " " + home.User.lastName,
-    lastMessage: chat.Messages[0] ? chat.Messages[0].message : " ",
-    };
-
-    res.json(response);
 };
 
 const searchHomes = async (req, res) => {

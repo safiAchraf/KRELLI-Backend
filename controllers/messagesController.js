@@ -4,16 +4,37 @@ export const getChats = async (req, res) => {
     const userId = req.user.userId;
     const chats = await prisma.chat.findMany({
         where: {
-            users: {
-                some: {
-                    id: userId
-                }
-            }
-        }
+        users: {
+            some: {
+            id: userId,
+            },
+        },
+        },
+        include: {
+        users: {
+            select: {
+            id: true,
+            profileImage: true,
+            home: {
+                select: {
+                Pictures: {
+                    take: 1,
+                },
+                },
+            },
+            },
+        },
+        messages: {
+            orderBy: {
+            createdAt: 'desc',
+            },
+            take: 1,
+        },
+        },
     });
+
     res.json(chats);
 };
-
 export const getChat = async (req, res) => {
     const chatId = req.params.id;
     const chat = await prisma.chat.findUnique({
