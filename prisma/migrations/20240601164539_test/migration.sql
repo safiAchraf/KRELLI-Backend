@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "User" ALTER COLUMN "phoneNumber" DROP NOT NULL,
+ALTER COLUMN "phoneNumber" SET DEFAULT '0790060033';

@@ -17,7 +17,7 @@ model User {
   id String @id @unique @default(uuid())
 
   email        String        @unique
-  phoneNumber  String        
+  phoneNumber  String?       @default("0790060033")        
   firstName    String
   lastName     String
   profileImage String?       @default("http://res.cloudinary.com/dyhllkjj1/image/upload/v1715439059/dblboyxypvtkaeebvpgr.jpg")
