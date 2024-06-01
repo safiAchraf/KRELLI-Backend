@@ -15,6 +15,7 @@ export const getProfile = async (req, res) => {
 export const updateProfile = async (req, res) => {
 	const userId = req.user.userId;
 	const { firstName, lastName, email, profileImage , password  , oldPassword} = req.body;
+    console.log("password = " , password);
     const hashedPassword = bcrypt.hash(password, 10);
    
 
