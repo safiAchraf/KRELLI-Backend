@@ -1,20 +1,34 @@
 import prisma from "../prisma/client.js";
+import bcrypt from "bcrypt";
 
 export const getProfile = async (req, res) => {
-    const userId = req.user.userId;
-    const user = await prisma.user.findUnique({
-        where: {
-        id: userId,
-        },
-    });
+	const userId = req.user.userId;
+	const user = await prisma.user.findUnique({
+		where: {
+			id: userId,
+		},
+	});
 
-    res.json(user);
+	res.json(user);
 };
 
 export const updateProfile = async (req, res) => {
-    const userId = req.user.userId;
-    const { firstName, lastName, email, profileImage } = req.body;
-    const user = await prisma.user.update({
+	const userId = req.user.userId;
+	const { firstName, lastName, email, profileImage , password  , oldPassword} = req.body;
+    if (password){
+        const hashedPassword = bcrypt.hash(password, 10);
+    }
+
+    const user = await prisma.user.findUnique({
+        where: {
+            id: userId,
+        },
+    });
+    const validPassword = await bcrypt.compare(oldPassword, user.password);
+    if (!validPassword) {
+        return res.status(400).send("Invalid credentials");
+    }
+    const updatedUser = await prisma.user.update({
         where: {
             id: userId,
         },
@@ -23,22 +37,20 @@ export const updateProfile = async (req, res) => {
             lastName,
             email,
             profileImage,
+            password : hashedPassword,
         },
     });
 
-    res.json(user);
+	res.json(user);
 };
 
-
-
-
 export const deleteProfile = async (req, res) => {
-    const userId = req.user.userId;
-    const user = await prisma.user.delete({
-        where: {
-            id: userId,
-        },
-    });
+	const userId = req.user.userId;
+	const user = await prisma.user.delete({
+		where: {
+			id: userId,
+		},
+	});
 
-    res.json(user);
+	res.json(user);
 };
