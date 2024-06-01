@@ -1,5 +1,8 @@
 import prisma from '../prisma/client.js'
 import { onlineUsers } from '../socket/socket.js';
+
+
+
 export const getChats = async (req, res) => {
     const userId = req.user.userId;
     const chats = await prisma.chat.findMany({
@@ -9,6 +12,12 @@ export const getChats = async (req, res) => {
                     id: userId
                 }
             }
+        },
+        select: {
+            picture: true,
+            ownerImage: true,
+            ownerName: true,
+            createdAt: true,
         },
     });
 
