@@ -28,28 +28,29 @@ model User {
   Reservation  Reservation[]
   Review       Review[]
   Chat         Chat[]
-} 
+}
 
 model Home {
-  id Int @id @default(autoincrement())
-  title       String
-  description String?
-  guests      Int
-  bedrooms    Int
-  bathrooms   Int
-  price       Float
-  wilaya      Int
-  category    String?
-  rating      Float?
-  longitude   Float?
-  latitude    Float?
-  Favorite    Favorite[]
+  id           Int           @id @default(autoincrement())
+  title        String
+  description  String?
+  guests       Int
+  bedrooms     Int
+  bathrooms    Int
+  price        Float
+  wilaya       Int
+  category     String?
+  rating       Float?
+  longitude    Float?
+  latitude     Float?
+  Favorite     Favorite[]
   Reservations Reservation[]
-  listedAt    DateTime      @default(now())
-  User        User?         @relation(fields: [userId], references: [id])
-  userId      String?
-  Review      Review[]
+  listedAt     DateTime      @default(now())
+  User         User?         @relation(fields: [userId], references: [id])
+  userId       String?
+  Review       Review[]
   Pictures     Picture[]
+  Chat         Chat[]
 }
 
 model Favorite {
@@ -101,17 +102,19 @@ model Picture {
 }
 
 model Chat {
-  id String @id @default(uuid())
-  createdAt DateTime @default(now())
-  picture  String?
+  id        String    @id @default(uuid())
+  createdAt DateTime  @default(now())
+  picture   String?
   users     User[]
-  Messages Message[]
+  Messages  Message[]
+  homeId    Int?
+  Home      Home?     @relation(fields: [homeId], references: [id])
 }
 
 model Message {
-  id String @id @default(uuid())
+  id        String   @id @default(uuid())
   message   String
   createdAt DateTime @default(now())
-  Chat   Chat?   @relation(fields: [chatId], references: [id])
-  chatId String?
+  Chat      Chat?    @relation(fields: [chatId], references: [id])
+  chatId    String?
 }

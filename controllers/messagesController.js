@@ -4,32 +4,11 @@ export const getChats = async (req, res) => {
     const userId = req.user.userId;
     const chats = await prisma.chat.findMany({
         where: {
-        users: {
-            some: {
-            id: userId,
-            },
-        },
-        },
-        include: {
-        users: {
-            select: {
-            id: true,
-            profileImage: true,
-            home: {
-                select: {
-                Pictures: {
-                    take: 1,
-                },
-                },
-            },
-            },
-        },
-        messages: {
-            orderBy: {
-            createdAt: 'desc',
-            },
-            take: 1,
-        },
+            users: {
+                some: {
+                    id: userId
+                }
+            }
         },
     });
 

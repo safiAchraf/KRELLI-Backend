@@ -154,6 +154,9 @@ const createChat = async (req, res) => {
         connect: userIds.map((id) => ({ id })),
       },
       picture: home.Pictures[0]?.url,
+      OwnerName : home.User.firstName + " " + home.User.lastName,
+      ownerImage : home.User.profileImage,
+        
     },
   });
   
