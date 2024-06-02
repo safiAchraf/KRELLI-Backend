@@ -5,7 +5,7 @@ const router = express.Router();
 
 
 router.get("/", searchHomes);
-router.get("/all", allhomes);
+router.get("/search", allhomes);
 router.get("/home", homePage);
 router.post("/:id/chat", createChat);
 router.post("/:id/reserve", addReservation);

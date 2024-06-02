@@ -211,14 +211,96 @@ const searchHomes = async (req, res) => {
 
 
 const allhomes = async (req, res) => {
+    let wilaya = req.query.wilaya;
+    const dzWilayas = {
+        "adrar" : 1,
+        "chlef" : 2,
+        "laghouat" : 3,
+        "oum el bouaghi" : 4,
+        "batna" : 5,
+        "bejaia" : 6,
+        "biskra" : 7,
+        "bechar" : 8,
+        "blida" : 9,
+        "bouira" : 10,
+        "tamanrasset" : 11,
+        "tebessa" : 12,
+        "tlemcen" : 13,
+        "tiaret" : 14,
+        "tizi ouzou" : 15,
+        "alger" : 16,
+        "djelfa" : 17,
+        "jijel" : 18,
+        "setif" : 19,
+        "saida" : 20,
+        "skikda" : 21,
+        "sidi bel abbes" : 22,
+        "annaba" : 23,
+        "guelma" : 24,
+        "constantine" : 25,
+        "medea" : 26,
+        "mostaganem" : 27,
+        "m'sila" : 28,
+        "mascara" : 29,
+        "ouargla" : 30,
+        "oran" : 31,
+        "el bayadh" : 32,
+        "illizi" : 33,
+        "bordj bou arreridj" : 34,
+        "boumerdes" : 35,
+        "el tarf" : 36,
+        "tindouf" : 37,
+        "tissemsilt" : 38,
+        "el oued" : 39,
+        "khenchela" : 40,
+        "souk ahras" : 41,
+        "tipaza" : 42,
+        "mila" : 43,
+        "ain defla" : 44,
+        "naama" : 45,
+        "ain temouchent" : 46,
+        "ghardaia" : 47,
+        "relizane" : 48,
+    };
+    wilaya = wilaya.toLowerCase();
+    if (!dzWilayas[wilaya]) {
+        return res.status(400).send("Invalid wilaya");
+    }
+    wilaya = dzWilayas[wilaya];
     const homes = await prisma.home.findMany({
+        where: {
+            wilaya : parseInt(wilaya),
+        },
+
         include: {
             Pictures: {
                 select: {
                     url: true,
                 },
             },
-        },
+            Review: {
+                select: {
+                    rating: true,
+                    User: {
+                        select: {
+                            firstName: true,
+                            lastName: true,
+                            profileImage: true,
+
+                        },
+                    },
+                    comment: true,
+                },
+            },
+            User: {
+                select: {
+                    firstName: true,
+                    lastName: true,
+                    profileImage: true,
+                
+                },
+            },
+    },
     });
     res.json(homes);
 };    
