@@ -35,7 +35,7 @@ export const updateProfile = async (req, res) => {
     const updatedUser = await prisma.user.update({
         where: {
             id: userId,
-        },
+        },  
         data: {
             firstName,
             lastName,

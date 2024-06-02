@@ -47,41 +47,40 @@ export const getChat = async (req, res) => {
 export const createMessage = async (req, res) => {
     const { chatId } = req.params;
     const { text } = req.body;
-    const userId = req.user.userId;
     const message = await prisma.message.create({
         data: {
-            text,
-            chat: {
-                connect: {
-                    id: chatId
-                }
+        message: text,
+        Chat: {
+            connect: {
+            id: chatId,
             },
-            user: {
-                connect: {
-                    id: userId
-                }
-            }
-        }
+        },
+
+        User: {
+            connect: {
+            id: req.user.userId,
+            },
+        },
+        },
     });
-    
+
     const chat = await prisma.chat.findUnique({
         where: {
-            id: chatId
+        id: chatId,
         },
         include: {
-            users: true
-        }
+        users: true,
+        },
     });
 
     chat.users.forEach((user) => {
         if (onlineUsers[user.id]) {
-            res.io.to(onlineUsers[user.id]).emit('message', message);
+        res.io.to(onlineUsers[user.id]).emit("message", message);
         }
     });
 
-
     res.json(message);
-}
+};
 
 
 
