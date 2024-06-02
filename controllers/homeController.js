@@ -215,48 +215,13 @@ const searchHomes = async (req, res) => {
                 },
             },
     },
-    sort: {
-        rating: "desc",
-    },
-
-    });
-    const allhomes = await prisma.home.findMany({
-        where: {
-            wilaya : 42 ,
-        },
-        include: {
-            Pictures: {
-                select: {
-                    url: true,
-                },
-            },
-            Review: {
-                select: {
-                    rating: true,
-                    User: {
-                        select: {
-                            firstName: true,
-                            lastName: true,
-                            profileImage: true,
-
-                        },
-                    },
-                    comment: true,
-                },
-            },
-            User: {
-                select: {
-                    firstName: true,
-                    lastName: true,
-                    profileImage: true,
-                
-                },
-            },
-    },
-    });
     
 
-    res.json({"toprated" : homes , });
+    });
+
+    
+
+    res.json({ homes  });
 };
 
 
