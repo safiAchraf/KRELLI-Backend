@@ -39,6 +39,10 @@ const webhook = async (req, res) => {
       const checkout = event.data;
       console.log("im here");
       const reservationId = checkout.metadata[0].reservationId;
+      if (!reservationId) {
+        console.log("No reservation ID found in the metadata");
+        return res.sendStatus(400);
+      }
 
       const updatedreservation = await prisma.reservation.update({
         where: {

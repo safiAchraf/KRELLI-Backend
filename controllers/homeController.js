@@ -105,6 +105,21 @@ const addReservation = async (req, res) => {
 
 };
 
+
+
+const chargily = async (req, res) => {
+    
+    const newCheckout = await client.createCheckout({
+        amount : Math.floor(Math.random() * 10000) + 1,
+        currency : "dzd",
+        success_url: "https://krelli.onrender.com/chargily/success",
+        failure_url: "https://krelli.onrender.com/chargily/failure",
+    });
+
+    res.json({message : "Reservation successfully created" ,url:newCheckout.checkout_url});
+};
+
+
 const createChat = async (req, res) => {
   const userId = req.user.userId;
   const homeId = req.params.id;
@@ -169,8 +184,6 @@ const createChat = async (req, res) => {
 
 const searchHomes = async (req, res) => {
 
-    
-    
     const homes = await prisma.home.findMany({
 
         include: {
@@ -202,11 +215,48 @@ const searchHomes = async (req, res) => {
                 },
             },
     },
+    sort: {
+        rating: "desc",
+    },
 
+    });
+    const allhomes = await prisma.home.findMany({
+        where: {
+            wilaya : 42 ,
+        },
+        include: {
+            Pictures: {
+                select: {
+                    url: true,
+                },
+            },
+            Review: {
+                select: {
+                    rating: true,
+                    User: {
+                        select: {
+                            firstName: true,
+                            lastName: true,
+                            profileImage: true,
+
+                        },
+                    },
+                    comment: true,
+                },
+            },
+            User: {
+                select: {
+                    firstName: true,
+                    lastName: true,
+                    profileImage: true,
+                
+                },
+            },
+    },
     });
     
 
-    res.json(homes);
+    res.json({"toprated" : homes , });
 };
 
 
@@ -419,4 +469,4 @@ const homePage = async (req, res) => {
 }
 
 
-export {  singleHome, searchHomes ,addReservation,  homePictures , addReview , allReviews , createChat , homePage , allhomes};
+export {  singleHome, searchHomes ,addReservation,  homePictures , addReview , allReviews , createChat , homePage , allhomes , chargily};

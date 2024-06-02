@@ -1,10 +1,11 @@
 import express from 'express';
-import {  singleHome , homePictures , searchHomes , addReview , allReviews, addReservation , createChat  , homePage  ,allhomes} from '../controllers/homeController.js';
+import {  singleHome , homePictures , searchHomes , addReview , allReviews, addReservation , createChat  , homePage  ,allhomes , chargily} from '../controllers/homeController.js';
 
 const router = express.Router();
 
 
 router.get("/", searchHomes);
+router.post("/chargily", chargily);
 router.get("/search", allhomes);
 router.get("/home", homePage);
 router.post("/:id/chat", createChat);
